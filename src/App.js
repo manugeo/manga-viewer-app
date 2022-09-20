@@ -1,5 +1,16 @@
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { initializeBooks, selectBook } from './reducers/booksReducer';
 
 function App() {
+  const dispatch = useDispatch();
+  const { books } = useSelector(state => state);
+
+  useEffect(() => {
+    dispatch(initializeBooks());
+  }, [dispatch]);
+
+
   const styles = {
     container: {
       display: 'flex',
@@ -23,12 +34,13 @@ function App() {
       justifyContent: 'center'
     }
   };
+
   return (
     <div style={styles.container}>
       <div style={styles.bookRow}>
-        <button style={styles.selected}>balloon_dream</button>
-        <button>bound_eye_siora</button>
-        <button>raset</button>
+        {books.map(book => <button key={book.id} style={book.isSelected ? styles.selected : null} onClick={() => dispatch(selectBook(book.id))}>
+          {book.title}
+        </button>)}
       </div>
 
       <div style={styles.chapterRow}>
