@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { initializeBooks, selectBook } from './reducers/booksReducer';
 import { selectChapter } from './reducers/chaptersReducer';
+import { setCurrentPage } from './reducers/currentPageReducer';
 
 function App() {
   const dispatch = useDispatch();
@@ -35,6 +36,35 @@ function App() {
     }
   };
 
+  const setNextPage = () => {
+    if ((currentPage.page_index + 1) < pages.length) {
+      const nextPage = pages[currentPage.page_index + 1];
+      dispatch(setCurrentPage(nextPage));
+      return;
+    }
+    const currentChapter = chapters.find(c => c.isSelected);
+    if ((currentChapter.chapter_index + 1) < chapters.length) {
+      const nextChapter = chapters[currentChapter.chapter_index + 1];
+      dispatch(selectChapter(nextChapter));
+      return;
+    }
+  };
+  const setPreviousPage = () => {
+    if (currentPage.page_index > 0) {
+      const previousPage = pages[currentPage.page_index - 1];
+      dispatch(setCurrentPage(previousPage));
+      return;
+    }
+    const currentChapter = chapters.find(c => c.isSelected);
+    if (currentChapter.chapter_index > 0) {
+      const previousChapter = chapters[currentChapter.chapter_index - 1];
+      dispatch(selectChapter(previousChapter));
+      const previousPage = previousChapter.pages[previousChapter.pages.length - 1];
+      dispatch(setCurrentPage(previousPage));
+      return;
+    }
+  };
+
   const BookRow = () => {
     const onBookBtnClick = (book) => dispatch(selectBook(book));
     return (
@@ -59,7 +89,7 @@ function App() {
       </div>
     );
   };
-  const Page = ({ page, totalPages }) => {
+  const Page = ({ page, totalPages, onLeftClick = () => {}, onRightClick = () => {} }) => {
     const { image, page_index } = page;
     const { width, height, file } = image;
     const pageNumber = (page_index + 1);
@@ -70,7 +100,9 @@ function App() {
       image: {
         width: '100%',
         maxWidth: `${width}px`,
-        maxHeight: `${height}px`
+        maxHeight: `${height}px`,
+        paddingLeft: '4px',
+        paddingRight: '4px'
       },
       numberText: {
         marginTop: '4px',
@@ -78,7 +110,14 @@ function App() {
       }
     };
     const onImageClick = (e) => {
-      console.log(e);
+      const { pageX, target } = e;
+      const { offsetLeft, width } = target;
+      const imageMiddleX = (offsetLeft + (width / 2));
+      if (pageX < imageMiddleX) {
+        onLeftClick();
+      } else {
+        onRightClick();
+      }
     };
     return (
       <div style={pageStyles.container}>
@@ -93,7 +132,7 @@ function App() {
     <div style={styles.container}>
       <BookRow />
       <ChapterRow />
-      {currentPage && <Page page={currentPage} totalPages={pages.length} />}
+      {currentPage && <Page page={currentPage} totalPages={pages.length} onLeftClick={setNextPage} onRightClick={setPreviousPage} />}
     </div>
   );
 }

@@ -20,7 +20,7 @@ const chaptersReducer = (state = [], action) => {
 
 export const selectChapter = ({ id, pages }) => {
   return (dispatch) => {
-    dispatch({ type: 'SELECT_CHAPTER', id: id });
+    dispatch({ type: 'SELECT_CHAPTER', id });
     dispatch(setPages(pages));
   };
 };
