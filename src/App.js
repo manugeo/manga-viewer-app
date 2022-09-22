@@ -100,9 +100,7 @@ function App() {
       image: {
         width: '100%',
         maxWidth: `${width}px`,
-        maxHeight: `${height}px`,
-        paddingLeft: '4px',
-        paddingRight: '4px'
+        maxHeight: `${height}px`
       },
       numberText: {
         marginTop: '4px',
