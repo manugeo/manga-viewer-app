@@ -9,10 +9,19 @@ const pagesReducer = (state = [], action) => {
   }
 };
 
+// Note: Pre-loading images for faster rendering.
+const preloadImages = (pages = []) => {
+  for (const { image } of pages) {
+    const img = new Image();
+    img.src = image.file;
+  }
+};
+
 export const setPages = (pages = []) => {
   return (dispatch) => {
     dispatch({ type: 'SET_PAGES', pages });
     dispatch(setCurrentPage(pages[0] || null));
+    preloadImages(pages);
   };
 };
 
