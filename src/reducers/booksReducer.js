@@ -1,4 +1,5 @@
 import booksService from '../services/books';
+import { loadChapters } from './chaptersReducer';
 
 const { getAll } = booksService;
 
@@ -17,13 +18,29 @@ const booksReducer = (state = [], action) => {
   }
 }
 
-export const selectBook = (id) => {
-  return { type: 'SELECT_BOOK', id };
+export const selectBook = ({ chapter_ids, id }) => {
+  return async (dispatch) => {
+    const chapterIds = chapter_ids;
+    dispatch(loadChapters(chapterIds));
+    dispatch({ type: 'SELECT_BOOK', id: id });
+  };
+
 };
 
 export const initializeBooks = () => {
+  console.log('Initializing books...');
   return async (dispatch) => {
-    const books = await getAll();
+    const response = await getAll();
+    const books = response.map((book, i) => {
+      if (i === 0) {
+        book.isSelected = true;
+        const chapterIds = book.chapter_ids;
+        dispatch(loadChapters(chapterIds));
+      } else {
+        book.isSelected = false;
+      }
+      return book;
+    });
     console.log({ books });
     dispatch({ type: 'SET_BOOKS', books });
   };
