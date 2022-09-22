@@ -15,8 +15,7 @@ function App() {
   const styles = {
     container: {
       maxWidth: '1200px',
-      marginTop: '4px',
-      marginBottom: '4px',
+      margin: '4px auto',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center'
