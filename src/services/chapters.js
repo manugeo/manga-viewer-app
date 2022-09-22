@@ -13,7 +13,6 @@ const getChapters = async (ids = []) => {
     const chapter = await getById(id);
     chapters.push(chapter);
   }
-  console.log('chapters :', chapters);
   return chapters;
 };
 

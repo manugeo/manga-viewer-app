@@ -8,7 +8,6 @@ const currentPageReducer = (state = null, action) => {
 };
 
 export const setCurrentPage = (currentPage) => {
-  console.log('Setting current page :', currentPage);
   return { type: 'SET_CURRENT_PAGE', currentPage };
 };
 

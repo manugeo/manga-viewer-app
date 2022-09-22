@@ -28,7 +28,6 @@ export const selectBook = ({ chapter_ids, id }) => {
 };
 
 export const initializeBooks = () => {
-  console.log('Initializing books...');
   return async (dispatch) => {
     const response = await getAll();
     const books = response.map((book, i) => {
@@ -41,7 +40,6 @@ export const initializeBooks = () => {
       }
       return book;
     });
-    console.log({ books });
     dispatch({ type: 'SET_BOOKS', books });
   };
 };
